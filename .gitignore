@@ -1,3 +1,6 @@
+# You need to write your own elevations.py for getting elevation data.
+elevations.py
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
