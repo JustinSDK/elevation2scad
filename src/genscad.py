@@ -13,7 +13,7 @@ def toPoints(rawData, ymin, inc):
         point = {
             'x': float(rawEvel['lat']), 
             'y': float(rawEvel['lng']), 
-            'z': float(rawEvel['elevation']) / 111
+            'z': float(rawEvel['elevation']) / 111000
         }
         if decimal.Decimal(rawEvel['lng']) == lat:
             latRows.append(point)
@@ -36,8 +36,8 @@ include <hull_polyline3d.scad>;
 include <function_grapher.scad>;
 
 points = {str(points)};
-thickness = 10;
-scale([55, 55, 0.5]) translate([-119.75, -21.5, 0]) function_grapher(points, thickness);
+thickness = 0.02;
+scale(111) translate([-119.75, -21.5, 0]) function_grapher(points, thickness);
 '''
 
     with open(filename, 'w') as f:
@@ -50,4 +50,4 @@ def gen_from(data, ymin, inc, sea_level):
     writeScad('evelation.scad', sea(toPoints(rawData, ymin, inc), sea_level))
 
 if __name__ == "__main__":
-    gen_from('elevations.dat', 21.750, 0.015, -2)
+    gen_from('elevations.dat', 21.750, 0.015, -0.02)
