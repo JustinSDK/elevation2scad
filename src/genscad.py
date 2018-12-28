@@ -45,7 +45,7 @@ scale({scale}) translate([{xoffset}, {yoffset}, 0]) function_grapher(points, thi
     with open(filename, 'w') as f:
         f.write(scadCode)
 
-def points_from(data, ymin, inc, sea_level = 1, heightScale = 1, thickness = 1):
+def points_from(data, ymin, inc, sea_level, heightScale = 1):
     with open(data) as f:
         rawData = [line2Evals(line) for line in f]
     return sea(toPoints(rawData, ymin, inc, heightScale), sea_level)
@@ -53,7 +53,6 @@ def points_from(data, ymin, inc, sea_level = 1, heightScale = 1, thickness = 1):
 def gen_scad_from(data, ymin, inc, sea_level = 1, heightScale = 1, thickness = 1, scale = 100):
     points = points_from(data, ymin, inc, sea_level / scale, heightScale)
     writeScad('evelation.scad', points, thickness, scale) 
-            
             
 if __name__ == "__main__":
     ymin, yinc, thickness, scale = 21.750, 0.015, -1, 100
