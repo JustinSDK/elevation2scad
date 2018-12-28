@@ -53,7 +53,19 @@ def points_from(data, ymin, inc, sea_level, heightScale = 1):
 def gen_scad_from(data, ymin, inc, sea_level = -1, heightScale = 1, thickness = 1, scale = 100):
     points = points_from(data, ymin, inc, sea_level / scale, heightScale)
     writeScad('evelation.scad', points, thickness, scale) 
-    
+
+def gen_surface_from(data, ymin, inc, sea_level = -1, heightScale = 1):
+    points = points_from(data, ymin, inc, sea_level * inc, heightScale)
+    with open('surface.dat', 'w') as f:
+        for rowPt in points:
+            for pt in rowPt:
+                f.write(f'{pt[2] / inc} ')
+            f.write('\n')
+            
 if __name__ == "__main__":
     ymin, yinc, thickness, scale = 21.750, 0.015, -1, 100
+    # generate elevation.scad
     gen_scad_from('elevations.dat', ymin, yinc, thickness, scale = scale)
+    
+    # generate surface.dat
+    # gen_surface_from('elevations.dat', ymin, yinc)
