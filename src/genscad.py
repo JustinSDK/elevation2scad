@@ -25,7 +25,7 @@ def toPoints(rawData, ymin, inc, heightScale = 1):
 
 def sea(points, level):
     def processRow(rowPts):
-        return [[point['x'], point['y'] , point['z'] if point['z'] > 0 else level] for point in rowPts]
+        return [[point['x'], point['y'] , point['z'] if point['z'] > 0 else level / 100] for point in rowPts]
     return [processRow(rowPts) for rowPts in points]
 
 def writeScad(filename, points, thickness):
@@ -45,11 +45,15 @@ scale(100) translate([{xoffset}, {yoffset}, 0]) function_grapher(points, thickne
     with open(filename, 'w') as f:
         f.write(scadCode)
 
-def gen_from(data, ymin, inc, sea_level, heightScale = 1):
+def points_from(data, ymin, inc, sea_level = 1, heightScale = 1, thickness = 1):
     with open(data) as f:
         rawData = [line2Evals(line) for line in f]
-
-    writeScad('evelation.scad', sea(toPoints(rawData, ymin, inc, heightScale), sea_level), 2)
-
+    return sea(toPoints(rawData, ymin, inc, heightScale), sea_level)
+        
+def gen_from(data, ymin, inc, sea_level = 1, heightScale = 1, thickness = 1):
+    points = points_from(data, ymin, inc, sea_level, heightScale)
+    writeScad('evelation.scad', points, thickness) 
+    
 if __name__ == "__main__":
-    gen_from('elevations.dat', 21.750, 0.015, -0.02)
+    ymin, yinc, thickness = 21.750, 0.015, -1
+    gen_from('elevations.dat', ymin, yinc, thickness)
