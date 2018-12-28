@@ -50,10 +50,10 @@ def points_from(data, ymin, inc, sea_level = 1, heightScale = 1, thickness = 1):
         rawData = [line2Evals(line) for line in f]
     return sea(toPoints(rawData, ymin, inc, heightScale), sea_level)
         
-def gen_from(data, ymin, inc, sea_level = 1, heightScale = 1, thickness = 1):
+def gen_scad_from(data, ymin, inc, sea_level = 1, heightScale = 1, thickness = 1):
     points = points_from(data, ymin, inc, sea_level, heightScale)
     writeScad('evelation.scad', points, thickness) 
     
 if __name__ == "__main__":
     ymin, yinc, thickness = 21.750, 0.015, -1
-    gen_from('elevations.dat', ymin, yinc, thickness)
+    gen_scad_from('elevations.dat', ymin, yinc, thickness)
