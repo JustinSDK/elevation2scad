@@ -25,10 +25,10 @@ def toPoints(rawData, ymin, inc, heightScale = 1):
 
 def sea(points, level):
     def processRow(rowPts):
-        return [[point['x'], point['y'] , point['z'] if point['z'] > 0 else level / 100] for point in rowPts]
+        return [[point['x'], point['y'] , point['z'] if point['z'] > 0 else level] for point in rowPts]
     return [processRow(rowPts) for rowPts in points]
 
-def writeScad(filename, points, thickness):
+def writeScad(filename, points, thickness, scale = 100):
     xoffset = -points[0][1][0];
     yoffset = -points[0][1][1];
     scadCode = f'''
@@ -38,8 +38,8 @@ include <hull_polyline3d.scad>;
 include <function_grapher.scad>;
 
 points = {str(points)};
-thickness = {thickness / 100};
-scale(100) translate([{xoffset}, {yoffset}, 0]) function_grapher(points, thickness);
+thickness = {thickness / scale};
+scale({scale}) translate([{xoffset}, {yoffset}, 0]) function_grapher(points, thickness);
 '''
 
     with open(filename, 'w') as f:
@@ -50,10 +50,10 @@ def points_from(data, ymin, inc, sea_level = 1, heightScale = 1, thickness = 1):
         rawData = [line2Evals(line) for line in f]
     return sea(toPoints(rawData, ymin, inc, heightScale), sea_level)
         
-def gen_scad_from(data, ymin, inc, sea_level = 1, heightScale = 1, thickness = 1):
-    points = points_from(data, ymin, inc, sea_level, heightScale)
+def gen_scad_from(data, ymin, inc, sea_level = 1, heightScale = 1, thickness = 1, scale = 100):
+    points = points_from(data, ymin, inc, sea_level / scale, heightScale)
     writeScad('evelation.scad', points, thickness) 
-    
+            
 if __name__ == "__main__":
-    ymin, yinc, thickness = 21.750, 0.015, -1
-    gen_scad_from('elevations.dat', ymin, yinc, thickness)
+    ymin, yinc, thickness, scale = 21.750, 0.015, -1, 100
+    gen_scad_from('elevations.dat', ymin, yinc, thickness, scale)
