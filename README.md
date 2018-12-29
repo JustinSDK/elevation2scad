@@ -24,6 +24,6 @@ The model shown below is [Taiwan](https://www.google.com.tw/maps/place/%E5%8F%B0
 
 ![Taiwan](images/Taiwan.JPG)
 
-You can use `-math.inf` to preserve original elevation below sea level. 
+You can use `-math.inf` to reserve original elevation below sea level. 
 
 ![Taiwan](images/Taiwan2.JPG)
