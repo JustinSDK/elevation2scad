@@ -1,4 +1,5 @@
 import decimal
+import math
 
 def line2Evals(line):
     tokens = line.strip().split('  ')
@@ -23,9 +24,10 @@ def toPoints(rawData, ymin, inc, heightScale = 1):
             latRows = [point]
     return points
 
+# if `level` is -math.inf, use point['z'] directly.
 def sea(points, level):
     def processRow(rowPts):
-        return [[point['x'], point['y'] , point['z'] if point['z'] > 0 else level] for point in rowPts]
+        return [[point['x'], point['y'] , point['z'] if (point['z'] > 0 or (level == -math.inf)) else level] for point in rowPts]
     return [processRow(rowPts) for rowPts in points]
 
 def writeScad(filename, points, thickness, scale = 100):
@@ -50,10 +52,12 @@ def points_from(data, ymin, inc, sea_level, heightScale = 1):
         rawData = [line2Evals(line) for line in f]
     return sea(toPoints(rawData, ymin, inc, heightScale), sea_level)
         
+# If `sea_level` is -math.inf, use use original elevation directly.        
 def gen_scad_from(data, ymin, inc, sea_level = -1, heightScale = 1, thickness = 1, scale = 100):
     points = points_from(data, ymin, inc, sea_level / scale, heightScale)
     writeScad('evelation.scad', points, thickness, scale) 
 
+# If `sea_level` is -math.inf, use use original elevation directly.
 def gen_surface_from(data, ymin, inc, sea_level = -1, heightScale = 1):
     points = points_from(data, ymin, inc, sea_level * inc, heightScale)
     with open('surface.dat', 'w') as f:
